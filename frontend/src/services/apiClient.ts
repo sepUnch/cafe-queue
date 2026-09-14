@@ -32,15 +32,19 @@ export interface PreOrderRequest {
   items: OrderItemRequest[];
 }
 
+// Di dev: BASE_URL = '' sehingga Vite proxy yang bekerja (e.g. /orders → localhost:8080)
+// Di production (Vercel): BASE_URL = URL backend Render (e.g. https://cafe-queue.onrender.com)
+const BASE_URL = import.meta.env.VITE_API_BASE_URL ?? '';
+
 export const apiClient = {
   async fetchMenu(): Promise<MenuItem[]> {
-    const res = await fetch('/menu');
+    const res = await fetch(`${BASE_URL}/menu`);
     if (!res.ok) throw new Error('Failed to fetch menu');
     return res.json();
   },
 
   async createOrder(order: OrderRequest) {
-    const res = await fetch('/orders', {
+    const res = await fetch(`${BASE_URL}/orders`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(order)
@@ -50,7 +54,7 @@ export const apiClient = {
   },
 
   async createPreOrder(preOrder: PreOrderRequest) {
-    const res = await fetch('/preorders', {
+    const res = await fetch(`${BASE_URL}/preorders`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(preOrder)
@@ -60,7 +64,7 @@ export const apiClient = {
   },
 
   async fetchCurrentQueue() {
-    const res = await fetch('/queue-board/current');
+    const res = await fetch(`${BASE_URL}/queue-board/current`);
     if (!res.ok) throw new Error('Failed to fetch queue');
     return res.json();
   },
@@ -69,7 +73,7 @@ export const apiClient = {
     const formData = new FormData();
     formData.append('file', file);
     
-    const res = await fetch('/reconciliation/upload', {
+    const res = await fetch(`${BASE_URL}/reconciliation/upload`, {
       method: 'POST',
       body: formData
     });
@@ -78,7 +82,7 @@ export const apiClient = {
   },
 
   async fetchDiscrepancies(uploadId: string) {
-    const res = await fetch(`/reconciliation/${uploadId}/discrepancies`);
+    const res = await fetch(`${BASE_URL}/reconciliation/${uploadId}/discrepancies`);
     if (!res.ok) throw new Error('Failed to fetch discrepancies');
     return res.json();
   }

@@ -1,12 +1,16 @@
 import { useQueueStore, type Ticket } from '@/stores/queueStore'
 
+// Di dev: BASE_URL = '' sehingga path relatif bekerja via Vite proxy
+// Di production (Vercel): BASE_URL = URL backend Render
+const BASE_URL = import.meta.env.VITE_API_BASE_URL ?? '';
+
 export class SseClient {
   private eventSource: EventSource | null = null;
 
   connect() {
     if (this.eventSource) return;
 
-    this.eventSource = new EventSource('/queue-board/stream');
+    this.eventSource = new EventSource(`${BASE_URL}/queue-board/stream`);
 
     this.eventSource.addEventListener('status-changed', (event) => {
       try {
