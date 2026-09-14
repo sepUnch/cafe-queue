@@ -1,0 +1,5 @@
+ALTER TABLE queue_ticket_history
+    ADD COLUMN updated_by VARCHAR(255) NOT NULL DEFAULT 'SYSTEM',
+    ADD COLUMN updated_date TIMESTAMP NOT NULL DEFAULT now(),
+    ADD COLUMN mark_for_delete BOOLEAN NOT NULL DEFAULT false,
+    ADD COLUMN optlock BIGINT NOT NULL DEFAULT 0;
